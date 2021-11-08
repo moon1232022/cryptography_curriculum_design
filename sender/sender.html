@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>sender</title>
+
+  <link rel="stylesheet" href="sender.css">
+
+  <script src="../js/vue.js"></script>
+  <script src="../js/axios.js"></script>
+  <script src="../js/jquery.js"></script>
+</head>
+<body>
+
+<div id="layout">
+
+<!--  用户获取显示-->
+  <div class="user">
+    <div style="height: 10px"></div>
+    <div class="sender">
+      <input type="text" v-model="senderInput" maxlength="10">
+      <button @click="getSender">确认发送者</button>
+      <span>当前发送者为 : {{ senderUsed }}</span>
+      <button @click="createRSAKey" class="createRSAKey">生成RSA公私钥对</button>
+      <button @click="createDESKey">生成DES密钥</button>
+    </div>
+
+    <div class="receiver">
+      <input type="text" v-model="receiverInput" maxlength="10">
+      <button @click="getReceiver">确认接收者</button>
+      <span>当前接收者为 : {{ receiverUsed }}</span>
+    </div>
+  </div>
+
+<!--  过程演示-->
+  <div class="display">
+    <ul style="list-style: none">
+      <li>
+        <label for="plainText">请输入明文</label><input type="text" id="plainText" v-model="message">
+      </li>
+      <li>
+        <button @click="getMD5">获取明文的MD5码</button><span>{{ md5 }}</span>
+      </li>
+      <li>
+        <button @click="sign">获取数字签名</button><span>{{ signature }}</span>
+      </li>
+      <li>
+        <button @click="DES_encrypt_message">DES加密明文</button><span>{{ DES_encrypted_message }}</span>
+      </li>
+      <li>
+        <button @click="DES_encrypt_signature">DES加密数字签名</button><span>{{ DES_encrypted_signature }}</span>
+      </li>
+      <li>
+        <button @click="RSA_encrypt_DESKey">加密DES密钥</button><span>{{ RSA_encrypted_DESKey }}</span>
+      </li>
+      <li>
+        <button @click="sendAll">Send All</button>
+        <button @click="clearAll">Clear All</button>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<script>
+  axios.defaults.baseURL = 'http://127.0.0.1:9990/'
+  const app = new Vue({
+    el: '#layout',
+    data: {
+      senderInput: '',
+      senderUsed: '',
+      receiverInput: '',
+      receiverUsed: '',
+      message: '',
+      md5: '',
+      signature: '',
+      DESKey: '',
+      nonce1: '',
+      nonce2: '',
+      DES_encrypted_message: '',
+      DES_encrypted_signature: '',
+      RSA_encrypted_DESKey: '',
+    },
+    methods: {
+      getSender() {
+        this.senderUsed = this.senderInput
+        this.senderInput = ''
+      },
+      getReceiver() {
+        this.receiverUsed = this.receiverInput
+        this.receiverInput = ''
+      },
+      createRSAKey() {
+        axios.get('/createRSAKey', {
+          params: {
+            user: this.senderUsed
+          }
+        }).then(res => {
+          window.alert(res['data'])
+        })
+      },
+      createDESKey() {
+        axios.get('/createDESKey', {
+          params: {
+            user: this.senderUsed
+          }
+        }).then(res => {
+          window.alert(res['data'])
+        })
+      },
+      getMD5() {
+        axios.get('/getMD5', {
+          params: {
+            user: this.senderUsed,
+            message: this.message
+          }
+        }).then(res => {
+          this.md5 = res['data']
+        })
+      },
+      sign() {
+        axios.get('/sign', {
+          params: {
+            sender: this.senderUsed,
+            message: this.message
+          }
+        }).then(res => {
+          this.signature = res['data']
+        })
+      },
+      DES_encrypt_message() {
+        axios.get('/DES_encrypt_message', {
+          params: {
+            sender: this.senderUsed,
+            message: this.message
+          }
+        }).then(res => {
+          this.DES_encrypted_message = res['data']
+          this.nonce1 = res['statusText']
+        })
+      },
+      DES_encrypt_signature() {
+        axios.get('/DES_encrypt_signature', {
+          params: {
+            sender: this.senderUsed,
+            message: this.signature
+          }
+        }).then(res => {
+          this.DES_encrypted_signature = res['data']
+          this.nonce2 = res['statusText']
+        })
+      },
+      RSA_encrypt_DESKey() {
+        axios.get('/RSA_encrypt_DESKey', {
+          params: {
+            sender: this.senderUsed,
+            receiver: this.receiverUsed,
+          }
+        }).then(res => {
+          this.RSA_encrypted_DESKey = res['data']
+        })
+      },
+      sendAll() {
+        let post_data = {
+          sender: this.senderUsed,
+          receiver: this.receiverUsed,
+          DES_encrypted_message: this.DES_encrypted_message,
+          DES_encrypted_signature: this.DES_encrypted_signature,
+          RSA_encrypted_DESKey: this.RSA_encrypted_DESKey,
+          nonce1: this.nonce1,
+          nonce2: this.nonce2
+        }
+        axios.post('/sendAll', post_data).then(res => {
+          window.alert(res['data'])
+        })
+      },
+      clearAll() {
+        this.senderInput = ''
+        this.receiverInput = ''
+        this.senderUsed = ''
+        this.receiverUsed = ''
+        this.message = ''
+        this.md5 = ''
+        this.signature = ''
+        this.DES_encrypted_message = ''
+        this.DES_encrypted_signature = ''
+        this.RSA_encrypted_DESKey = ''
+      }
+    }
+  })
+</script>
+</body>
+</html>

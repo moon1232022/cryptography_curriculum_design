@@ -1,0 +1,112 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-size: 17px;
+  font-weight: 900;
+  font-family: Aa元气满满;
+}
+body{
+  /*background-image: url("背景图.jpg");*/
+  background-size: cover;
+}
+button{
+  width: 150px;
+  height: 50px;
+  border-radius: 5px;
+  border: 2px solid wheat;
+  /*background-color: rgba(1,1,1,0.5);*/
+  /*background-image:-webkit-linear-gradient(180deg,orange,cyan,greenyellow);*/
+  /*-webkit-background-clip:text;*/
+  /*-webkit-text-fill-color:transparent;*/
+}
+button:active{
+  transform: scale(1.05,1.05);
+  box-shadow: 1px 1px 25px wheat;
+}
+input{
+  width: 200px;
+  height: 50px;
+  overflow: scroll;
+  border-radius: 5px;
+  border: 2px solid wheat;
+  /*background-color: rgba(1,1,1,0.5);*/
+  /*background-image:-webkit-linear-gradient(180deg,orange,cyan,greenyellow);*/
+  /*-webkit-background-clip:text;*/
+  /*-webkit-text-fill-color:transparent;*/
+  /*text-overflow: ellipsis;*/
+}
+span,label{
+  /*background-image:-webkit-linear-gradient(180deg,orange,cyan,greenyellow);*/
+  /*-webkit-background-clip:text;*/
+  /*-webkit-text-fill-color:transparent;*/
+}
+
+/*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
+::-webkit-scrollbar{
+  width: 7px;
+  height: 7px;
+  background-color: #F5F5F5;
+}
+
+/*定义滚动条轨道 内阴影+圆角*/
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  background-color: #F5F5F5;
+}
+
+/*定义滑块 内阴影+圆角*/
+::-webkit-scrollbar-thumb{
+  border-radius: 10px;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, .1);
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .1);
+  background-color: #c8c8c8;
+}
+
+#layout{
+  /*background-color: rgba(255,255,255,0.1);*/
+  background-image: linear-gradient(rgba(255,165,0, 0.45),rgba(0,255,255,0.45),rgba(173,255,47,0.45));
+}
+
+/*头部份*/
+.sender{
+  margin: 30px;
+}
+.sender button{
+  margin: 10px;
+}
+button[class='createRSAKey']{
+  margin-left: 200px;
+}
+.receiver{
+  margin: 30px;
+}
+.receiver button{
+  margin: 10px;
+}
+
+
+/*演示部分*/
+li{
+  line-height: 100px;
+}
+li:nth-child(1){
+  text-align: center;
+}
+li:nth-child(1) label{
+  font-size: 50px;
+}
+li:nth-child(1) input{
+  width: 1000px;
+  height: 70px;
+  font-size: 50px;
+  margin-left: 50px;
+}
+li button{
+  margin-left: 30px;
+}
+li:last-child {
+  text-align: center;
+}

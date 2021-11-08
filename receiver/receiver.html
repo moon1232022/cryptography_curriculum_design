@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>receiver</title>
+  <link rel="stylesheet" href="receiver.css">
+
+  <script src="../js/vue.js"></script>
+  <script src="../js/axios.js"></script>
+  <script src="../js/jquery.js"></script>
+</head>
+<body>
+<div id="layout">
+  <!--  用户获取显示-->
+  <div class="user">
+    <div style="height: 20px"></div>
+    <div class="receiver">
+      <input type="text" v-model="receiverInput" maxlength="10">
+      <button @click="getReceiver">确认接收者</button>
+      <span>当前接收者为 : {{ receiverUsed }}</span>
+      <button @click="createRSAKey" class="createRSAKey">生成RSA公私钥对</button>
+    </div>
+
+    <div class="sender">
+      <input type="text" v-model="senderInput" maxlength="10">
+      <button @click="getSender">确认发送者</button>
+      <span>当前发送者为 : {{ senderUsed }}</span>
+    </div>
+  </div>
+
+  <div class="display">
+    <ul style="list-style: none">
+      <li>
+        <button @click="RSA_decrypt_DESKey">解密获得DES密钥</button>
+        <span>{{ DESKey }}</span>
+      </li>
+      <li>
+        <button @click="DES_decrypt_message">DES解密获取明文</button>
+        <span>{{ message }}</span></li>
+      <li><button @click="DES_decrypt_signature">DES解密获取数字签名</button>
+        <span>{{ signature }}</span>
+      </li>
+      <li><button @click="getMD5">生成明文的MD5</button><span>{{ md5 }}</span></li>
+      <li>
+        <button @click="check_sign">验证数字签名</button>
+        <button @click="clearAll">Clear All</button>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<script>
+  axios.defaults.baseURL = 'http://127.0.0.1:9990/'
+  const app = new Vue({
+    el: '#layout',
+    data: {
+      senderInput: '',
+      senderUsed: '',
+      receiverInput: '',
+      receiverUsed: '',
+      message: '',
+      md5: '',
+      signature: '',
+      DESKey: '',
+      result: ''
+    },
+    methods: {
+      getSender() {
+        this.senderUsed = this.senderInput
+        this.senderInput = ''
+      },
+      getReceiver() {
+        this.receiverUsed = this.receiverInput
+        this.receiverInput = ''
+      },
+      createRSAKey() {
+        axios.get('/createRSAKey', {
+          params: {
+            user: this.receiverUsed
+          }
+        }).then(res => {
+          window.alert(res['data'])
+        })
+      },
+      getMD5() {
+        axios.get('/getMD5', {
+          params: {
+            user: this.receiverUsed,
+            message: this.message
+          }
+        }).then(res => {
+          this.md5 = res['data']
+        })
+      },
+      RSA_decrypt_DESKey() {
+        axios.get('/RSA_decrypt_DESKey', {
+          params: {
+            receiver: this.receiverUsed,
+          }
+        }).then(res => {
+          this.DESKey = res['data']
+        })
+      },
+      DES_decrypt_message() {
+        axios.post('/DES_decrypt_message', {
+          receiver: this.receiverUsed,
+          tp: 'message',
+        }).then(res => {
+          this.message = res['data']
+        })
+      },
+      DES_decrypt_signature() {
+        axios.post('/DES_decrypt_signature', {
+          receiver: this.receiverUsed,
+          tp: 'signature',
+        }).then(res => {
+          this.signature = res['data']
+        })
+      },
+      check_sign() {
+        axios.post('/check_sign', {
+          receiver: this.receiverUsed,
+          sender: this.senderUsed,
+          message: this.message,
+          signature: this.signature
+        }).then(res => {
+          this.result = res['data']
+          window.alert(this.result)
+        })
+      },
+      clearAll() {
+        this.senderInput = ''
+        this.senderUsed =  ''
+        this.receiverInput =  ''
+        this.receiverUsed =  ''
+        this.message =  ''
+        this.md5 =  ''
+        this.signature = ''
+        this.DESKey =  ''
+        this.result =  ''
+      }
+    }
+  })
+</script>
+</body>
+</html>

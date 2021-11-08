@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>RSA数字签名设计</title>
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+  <!-- import Vue before Element -->
+  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script src="js/jquery.js"></script>
+
+  <style>
+    *{
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body{
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      vertical-align: middle;
+    }
+    .image{
+      position: absolute;
+      width: 2112px;
+      height: 1188px;
+      background-image: url("背景图.jpg");
+      background-size: cover;
+    }
+    .content{
+      float: left;
+      position: relative;
+      width: 800px;
+      height: 400px;
+      top: 20%;
+      left: 50%;
+      margin-left: -400px;
+      text-align: center;
+      vertical-align: middle;
+    }
+    .content h1{
+      font-family: 微软雅黑;
+      font-size: 75px;
+    }
+    .content .entry{
+      margin: 100px;
+    }
+    .content .entry a{
+      color: black;
+      margin: 30px;
+      font-size: 50px;
+      font-family: Aa元气满满;
+      text-shadow: 1px 1px 5px cyan, 1px 1px 5px blueviolet, 1px 1px 5px hotpink;
+      font-style: italic;
+    }
+    .content .entry a:hover{
+      text-shadow: 3px 3px 15px deepskyblue;
+    }
+    #app{
+      float: left;
+      position: relative;
+      z-index: 500;
+      margin-left: 1800px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="app">
+  <el-button @click="visible = true" icon="el-icon-question" type="text">帮助</el-button>
+  <el-dialog :visible.sync="visible" title="">
+    <el-steps :active="5" align-center>
+      <el-step title="步骤1" description="分别打开sender和receiver页面"></el-step>
+      <el-step title="步骤2" description="分别确认发送者和接收者并生成密钥"></el-step>
+      <el-step title="步骤3" description="sender页面输入明文并依次点击下方按钮,最后点击send all"></el-step>
+      <el-step title="步骤4" description="receiver页面从解密获得DES密钥开始依次点击按钮"></el-step>
+      <el-step title="步骤5" description="receiver页面按F12打开开发者工具并在控制台输入app.message='',单引号中随便加入内容，再点击验证数字签名"></el-step>
+    </el-steps>
+  </el-dialog>
+</div>
+
+<div class="image"></div>
+
+
+<div class="content">
+  <h1>RSA数字签名算法设计</h1>
+  <div class="entry">
+    <a href="./sender/sender.html" style="text-decoration: none" target="_blank">sender</a>
+    <a href="./receiver/receiver.html" style="text-decoration: none" target="_blank">receiver</a>
+  </div>
+</div>
+
+
+
+<script>
+  $('.image').mousemove(function(e) {
+    let x = (e.pageX * -1 / 20), y = (e.pageY * -1 / 20);
+    $(this).css('background-position', x + 'px ' + y + 'px');
+  });
+</script>
+
+
+<script>
+  new Vue({
+    el: '#app',
+    data: function() {
+      return { visible: false }
+    }
+  })
+</script>
+</body>
+</html>
